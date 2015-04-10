@@ -2,11 +2,11 @@
   <name>irp6_bringup_mlotz</name>
   <version>0.0.1</version>
   <description>IRP6 bringup</description>
-  <maintainer email="asd3@gmail.com">TEST</maintainer>
+  <maintainer email="asd@gmail.com">T1</maintainer>
 
   <license>BSD</license>
 
-  <author>TEST</author>
+  <author>T1</author>
 
   <buildtool_depend>catkin</buildtool_depend>
 
