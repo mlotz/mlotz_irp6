@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from irpos import *
-
+import numpy as np
 # DEMO FUNCTIONS
 
 # POSTUMENT DEMOS
@@ -70,8 +70,8 @@ def T3():
 	print "Irp6ot: Behavior: T3 - done."
 
 def T4():
-	irpos = IRPOS("IRpOS", "Irp6ot", 7 , "irp6ot_manager")
-
+	#irpos = IRPOS("IRpOS", "Irp6ot", 7 , "irp6ot_manager")
+	irpos = IRPOS("IRpOS", "Irp6ot", 7)
 	print "Irp6ot: Behavior: T4 - Starting."
 	irpos.move_to_synchro_position(10.0)
 	joint_trajectory = [JointTrajectoryPoint([0.0,0.0, -1.5707963268, 0.0, 0.0, 4.7123889804 , 0.0], [0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [], [], rospy.Duration(15.0))]
@@ -81,30 +81,95 @@ def T4():
 	print "Irp6ot: Behavior: T4 - done."
 	
 def T5():
-	irpos = IRPOS("IRpOS", "Irp6ot", 7 , "irp6ot_manager")
-
-	print "Irp6ot: Behavior: T5 - Dropping."
+	#irpos = IRPOS("IRpOS", "Irp6ot", 7 , "irp6ot_manager")
+	irpos = IRPOS("IRpOS", "Irp6ot", 7)
+	print "Irp6ot: Behavior: T5 - Rise!."
 	
 	
-	
-	print str(irpos.get_tfg_joint_position())
+	irpos.move_rel_to_cartesian_pose(15.0, Pose(Point(0.0, 0.0, -0.15), Quaternion(0.0, 0.0, 0.0, 1.0)))
+	#print str(irpos.get_tfg_joint_position())
 
 	print "Irp6ot: Behavior: T5 - done."
 	
 def T6():
-	irpos = IRPOS("IRpOS", "Irp6ot", 7 , "irp6ot_manager")
-
+	#irpos = IRPOS("IRpOS", "Irp6ot", 7 , "irp6ot_manager")
+	irpos = IRPOS("IRpOS", "Irp6ot", 7)
 	print "Irp6ot: Behavior: T6 - Grabbing."
 	
-	irpos.tfg_to_joint_position(0.0652, 10.0)
+	irpos.tfg_to_joint_position(0.064, 10.0)
 	
 	print str(irpos.get_tfg_joint_position())
 
 	print "Irp6ot: Behavior: T6 - done."
-	
-def TSynch():
-	irpos = IRPOS("IRpOS", "Irp6ot", 7 , "irp6ot_manager")
 
+def TC():
+	#irpos = IRPOS("IRpOS", "Irp6ot", 7 , "irp6ot_manager")
+	irpos = IRPOS("IRpOS", "Irp6ot", 7)
+	print "Irp6ot: Behavior: TC - decendt to contact."
+	
+	irpos.move_to_synchro_position(10.0)
+	joint_trajectory = [JointTrajectoryPoint([0.0,0.0, -1.5707963268, 0.0, 0.0, 4.7123889804 , 0.0], [0.0,0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [], [], rospy.Duration(15.0))]
+	irpos.move_along_joint_trajectory(joint_trajectory)
+	#irpos.move_rel_to_cartesian_pose(10.0, Pose(Point(0.0, 0.0, -0.03), Quaternion(0.0, 0.0, 0.0, 1.0)))	
+	irpos.move_rel_to_cartesian_pose_with_contact( 20.0, Pose(Point(0.0, 0.0, 0.20), Quaternion(0.0, 0.0, 0.0, 1.0)),Wrench(Vector3(10.0, 10.0, 4.0), Vector3(0.0, 0.0, 0.0)))
+	irpos.move_rel_to_cartesian_pose(2.0, Pose(Point(0.0, 0.0, -0.01), Quaternion(0.0, 0.0, 0.0, 1.0)))
+	#irpos.move_rel_to_cartesian_pose(2.0, Pose(Point(0.01, 0.0, 0.0), Quaternion(0.0, 0.0, 0.0, 1.0)))
+	irpos.move_rel_to_cartesian_pose_with_contact( 20.0, Pose(Point(0.20, 0.0, 0.0), Quaternion(0.0, 0.0, 0.0, 1.0)),Wrench(Vector3(6.0, 6.0, 6.0), Vector3(0.0, 0.0, 0.0)))
+	#time.sleep(6.0)
+	P1 = irpos.get_cartesian_pose()
+	print str(P1)
+	P1x = P1.position.x
+	P1y = P1.position.y
+	P1z = P1.position.z
+	time.sleep(1.0)
+	irpos.move_rel_to_cartesian_pose_with_contact( 30.0, Pose(Point(-0.30, 0.0, 0.0), Quaternion(0.0, 0.0, 0.0, 1.0)),Wrench(Vector3(8.0, 8.0, 8.0), Vector3(0.0, 0.0, 0.0)))
+	P2 = irpos.get_cartesian_pose()
+	print str(P2)
+	P2x = P2.position.x
+	P2y = P2.position.y
+	P2z = P2.position.z
+	time.sleep(1.0)
+	irpos.move_rel_to_cartesian_pose_with_contact( 20.0, Pose(Point(0.0, -0.20, 0.0), Quaternion(0.0, 0.0, 0.0, 1.0)),Wrench(Vector3(6.0, 6.0, 6.0), Vector3(0.0, 0.0, 0.0)))
+	P3 = irpos.get_cartesian_pose()
+	print str(P3)
+	P3x = P3.position.x
+	P3y = P3.position.y
+	P3z = P3.position.z
+	time.sleep(1.0)
+	
+	A = np.array([P1x, P1y, P1z])
+	B = np.array([P2x, P2y, P2z])
+	C = np.array([P3x, P3y, P3z])
+	a = np.linalg.norm(C - B)
+	b = np.linalg.norm(C - A)
+	c = np.linalg.norm(B - A)
+	s = (a + b + c) / 2
+	R = a*b*c / 4 / np.sqrt(s * (s - a) * (s - b) * (s - c))
+	b1 = a*a * (b*b + c*c - a*a)
+	b2 = b*b * (a*a + c*c - b*b)
+	b3 = c*c * (a*a + b*b - c*c)
+	P = np.column_stack((A, B, C)).dot(np.hstack((b1, b2, b3)))
+	P /= b1 + b2 + b3
+	
+	
+	print P
+	print P[0]
+	T = P - C 
+	print T
+	time.sleep(1.0)
+	
+	irpos.move_rel_to_cartesian_pose( 20.0, Pose(Point(T[1],T[0] , 0.0), Quaternion(0.0, 0.0, 0.0, 1.0)))
+	time.sleep(10.0)
+	#move_to_cartesian_pose(20.0, Pose(P1))
+	#irpos.move_rel_to_cartesian_pose(6.0, Pose(Point(-0.08, 0.0, 0.0), Quaternion(0.0, 0.0, 0.0, 1.0)))
+	irpos.move_rel_to_cartesian_pose(15.0, Pose(Point(0.0, 0.0, -0.14), Quaternion(0.0, 0.0, 0.0, 1.0)))
+	irpos.move_to_synchro_position(10.0)
+	
+	print "Irp6ot: Behavior: TC - done. Current position at center"
+		
+def TSynch():
+	#irpos = IRPOS("IRpOS", "Irp6ot", 7 , "irp6ot_manager")
+	irpos = IRPOS("IRpOS", "Irp6ot", 7)
 	print "Irp6ot: Behavior: TS - Synchronizing."
 	irpos.move_to_synchro_position(10.0)
 
@@ -245,3 +310,5 @@ if __name__ == '__main__':
 		T6()
 	elif sys.argv[1]=="TS":
 		TSynch()
+	elif sys.argv[1]=="TC":
+		TC()
